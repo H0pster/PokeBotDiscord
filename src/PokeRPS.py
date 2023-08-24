@@ -1,9 +1,8 @@
 import discord
-from discord import Interaction
-from discord.ui import Button, View
-from discord.ext import commands
+from discord.ui import View
 
 import checks
+from src import databaseSetup
 
 
 class MyView(View):
@@ -54,7 +53,7 @@ class MyView(View):
             print(e)
 
 
-async def run_rps(client, ctx, p1):
+async def run_rps(client, ctx, p1, conn):
     done = True
 
     print("Before Loop")
@@ -72,23 +71,29 @@ async def run_rps(client, ctx, p1):
             await ctx.send("Tie play again!")
         elif view.op == "Fire" and view.us == "Water":
             await ctx.send("Water beats Fire so <@" + str(ctx.author.id) + "> won!")
+            await databaseSetup.insert_FWG(conn, ctx.author.id)
             done = False
         elif view.op == "Fire" and view.us == "Grass":
             await ctx.send("Fire beats Grass so <@" + str(p1.id) + "> won!")
+            await databaseSetup.insert_FWG(conn, p1.id)
             done = False
         elif view.op == "Water" and view.us == "Fire":
             await ctx.send("Water beats Fire so <@" + str(p1.id) + "> won!")
+            await databaseSetup.insert_FWG(conn, p1.id)
             done = False
         elif view.op == "Water" and view.us == "Water":
             await ctx.send("Tie play again!")
         elif view.op == "Water" and view.us == "Grass":
             await ctx.send("Grass beats Water so <@" + str(ctx.author.id) + "> won!")
+            await databaseSetup.insert_FWG(conn, ctx.author.id)
             done = False
         elif view.op == "Grass" and view.us == "Fire":
             await ctx.send("Fire beats Grass so <@" + str(ctx.author.id) + "> won!")
+            await databaseSetup.insert_FWG(conn, ctx.author.id)
             done = False
         elif view.op == "Grass" and view.us == "Water":
             await ctx.send("Grass beats Water so <@" + str(p1.id) + "> won!")
+            await databaseSetup.insert_FWG(conn, p1.id)
             done = False
         elif view.op == "Grass" and view.us == "Grass":
             await ctx.send("Tie play again!")
